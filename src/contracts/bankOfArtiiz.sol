@@ -30,6 +30,11 @@ contract bankOfArtiiz {
         _token = token;
     }
 
+    function getFundsInvested(address userAddress) external view returns(uint) {
+        uint amountInvested = depositedEtherBalance[userAddress];
+        return amountInvested;
+    }
+
     function deposit() public payable {
         // Local Variables
         address userAddress = msg.sender;
