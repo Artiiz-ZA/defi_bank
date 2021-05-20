@@ -45,8 +45,18 @@ class App extends Component {
           .getFundsInvested(accounts[0])
           .call();
 
+        const accruedInterest = await bank.methods
+          .getCurrentlyAccruedInterest(accounts[0])
+          .call();
+
         // Set bank states
-        this.setState({ token, bank, bankAddress, bankBalance });
+        this.setState({
+          token,
+          bank,
+          bankAddress,
+          bankBalance,
+          accruedInterest,
+        });
       } catch (e) {
         console.log("Error", e);
         window.alert(
@@ -111,6 +121,7 @@ class App extends Component {
       balance: 0,
       bankAddress: null,
       bankBalance: 0,
+      accruedInterest: 0,
     };
   }
 
@@ -181,6 +192,8 @@ class App extends Component {
                       You have {this.state.bankBalance / 10 ** 18} ETH invested
                       that you can withdraw.
                       <br></br>
+                      You have earned {this.state.accruedInterest /10 ** 18} Tokens as interest with your investment.
+                      <br></br>
                       <button
                         type="submit"
                         className="btn btn-primary"
@@ -190,10 +203,6 @@ class App extends Component {
                       </button>
                     </div>
                   </Tab>
-                  <Tab
-                    eventKey="checkAccrued"
-                    title="Check Accrued Interest"
-                  ></Tab>
                 </Tabs>
               </div>
             </main>

@@ -30,9 +30,24 @@ contract bankOfArtiiz {
         _token = token;
     }
 
-    function getFundsInvested(address userAddress) external view returns(uint) {
+    function getFundsInvested(address userAddress) public view returns(uint) {
         uint amountInvested = depositedEtherBalance[userAddress];
         return amountInvested;
+    }
+
+    function getCurrentlyAccruedInterest(address userAddress) public view returns(uint) {
+        // Local Variables
+        uint256 amountInvested = depositedEtherBalance[userAddress];
+        uint256 currentTime = block.timestamp;
+        
+        // Calculate Interest Accrued
+        uint256 timeInvested = currentTime - depositStartTime[userAddress];
+
+        // 31668017 = interest per second for (10% APY) for 0.01 ETH Minimum. So we split up the investment by 0.01 ETH to get per second rate
+        uint256 interestPerSecond = 31668017 * (amountInvested / 1e16);
+        uint256 interestEarned = interestPerSecond * timeInvested;
+
+        return interestEarned;
     }
 
     function deposit() public payable {
