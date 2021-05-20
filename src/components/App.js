@@ -76,21 +76,25 @@ class App extends Component {
   }
 
   async withdraw(e) {
-    // TODO: Move this into the button logic
     e.preventDefault();
 
     try {
-      await this.state.bank.methods
+      var receipt = await this.state.bank.methods
         .withdraw()
         .send({ from: this.state.account });
+      // Values as returned in the Withdrawal Event from the Smart Contract
+      var receiptValues = receipt.events.Withdraw.returnValues;
 
       // Set state value
       this.state.balance = 0;
 
       window.alert(
-        "Successfully Withdrew " + this.state.bankBalance / 10 ** 18 + " ETH"
+        "Successfully Withdrew " +
+          receiptValues.etherAmount / 10 ** 18 +
+          " ETH, with " +
+          receiptValues.interestPaidOut / 10 ** 18 +
+          " Tokens as interest."
       );
-      // TODO: Add amount of interest paid out to message
     } catch (e) {
       console.log("Error", e);
       window.alert("Error withdrawing funds from the Bank!");
